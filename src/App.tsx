@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { healthCheck } from "./api/apiClient";
+import { login } from "./api/auth";
 
 const App: React.FC = () => {
   const [status, setStatus] = useState<string>("Checking backend...");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    healthCheck()
+    login("admin", "admin")
       .then((data) => {
-        setStatus(`Backend OK: ${JSON.stringify(data)}`);
+        console.log("LOGIN RESPONSE:", data);
+        setStatus(`Login OK: ${JSON.stringify(data)}`);
       })
       .catch((err) => {
+        console.error("LOGIN ERROR:", err.message);
         setError(err.message);
       });
   }, []);
@@ -23,6 +25,9 @@ const App: React.FC = () => {
     <div style={{ padding: "2rem" }}>
       <h2>Tepuy FMECA</h2>
       <p>{status}</p>
+      <p style={{ fontSize: "0.9rem", color: "#666" }}>
+        (Check browser console for details)
+      </p>
     </div>
   );
 };
