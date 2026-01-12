@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/api/auth/:path*",
+      "destination": "http://api.tepuy.net/auth/:path*"
+    },
+    {
       "source": "/api/:path*",
       "destination": "http://api.tepuy.net/:path*"
     }
