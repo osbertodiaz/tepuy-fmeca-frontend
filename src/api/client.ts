@@ -3,10 +3,9 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export async function apiFetch(
   path: string,
   options: RequestInit = {},
-  tenantId: string = "demo"
+  tenantId: string = "test"
 ) {
-  const headers = {
-    "Content-Type": "application/json",
+  const headers: HeadersInit = {
     "X-Tenant-ID": tenantId,
     ...(options.headers || {}),
   };
@@ -16,10 +15,11 @@ export async function apiFetch(
     headers,
   });
 
+  const text = await response.text();
+
   if (!response.ok) {
-    const text = await response.text();
     throw new Error(text || `HTTP ${response.status}`);
   }
 
-  return response.json();
+  return text ? JSON.parse(text) : null;
 }
