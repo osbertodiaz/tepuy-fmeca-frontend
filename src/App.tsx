@@ -1,41 +1,68 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { AuthProvider } from "./auth/AuthContext";
 import { RequireAuth } from "./auth/RequireAuth";
-import { LoginPage } from "./pages/LoginPage";
+import RequireRole from "./auth/RequireRole";
 
-const ProtectedHome: React.FC = () => {
-  return (
-    <div style={{ padding: "2rem" }}>
-      <h1>Tepuy FMECA</h1>
+import MainLayout from "./layouts/MainLayout";
 
-      <p>
-        Cloud-based FMEA / FMECA SaaS platform.
-      </p>
+import LoginPage from "./pages/LoginPage";
+import DashboardPage from "./pages/DashboardPage";
+import ProjectsPage from "./pages/ProjectsPage";
+import AdminPage from "./pages/AdminPage";
+import NotAuthorizedPage from "./pages/NotAuthorizedPage";
 
-      <p style={{ color: "#666", fontSize: "0.9rem" }}>
-        Authenticated session active.
-      </p>
-    </div>
-  );
-};
+import { routeRoles } from "./navigation/routeRoles";
 
 const App: React.FC = () => {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          {/* Public */}
           <Route path="/login" element={<LoginPage />} />
 
+          {/* Protected */}
           <Route
             path="/"
             element={
               <RequireAuth>
-                <ProtectedHome />
+                <MainLayout />
               </RequireAuth>
             }
-          />
+          >
+            <Route index element={<Navigate to="/dashboard" replace />} />
+
+            <Route
+              path="dashboard"
+              element={
+                <RequireRole allowedRoles={routeRoles["/dashboard"]}>
+                  <DashboardPage />
+                </RequireRole>
+              }
+            />
+
+            <Route
+              path="projects"
+              element={
+                <RequireRole allowedRoles={routeRoles["/projects"]}>
+                  <ProjectsPage />
+                </RequireRole>
+              }
+            />
+
+            <Route
+              path="admin"
+              element={
+                <RequireRole allowedRoles={routeRoles["/admin"]}>
+                  <AdminPage />
+                </RequireRole>
+              }
+            />
+
+            <Route path="not-authorized" element={<NotAuthorizedPage />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>
