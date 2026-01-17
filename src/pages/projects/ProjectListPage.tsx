@@ -1,38 +1,26 @@
 import { useEffect, useState } from "react";
-import { getProjects, ProjectDTO } from "../../api/projects";
 import { Link } from "react-router-dom";
+import { getProjects, ProjectDTO } from "../../api/projects";
+import { useAuth } from "../../auth/AuthContext";
 
 export default function ProjectListPage() {
+  const { tenantId } = useAuth();
+
   const [projects, setProjects] = useState<ProjectDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let mounted = true;
+    if (!tenantId) return;
 
-    getProjects()
-      .then((data) => {
-        if (mounted) setProjects(data);
-      })
-      .catch(() => {
-        if (mounted) setError("Failed to load projects");
-      })
-      .finally(() => {
-        if (mounted) setLoading(false);
-      });
+    getProjects(tenantId)
+      .then(setProjects)
+      .catch(() => setError("Failed to load projects"))
+      .finally(() => setLoading(false));
+  }, [tenantId]);
 
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  if (loading) {
-    return <p>Loading projects…</p>;
-  }
-
-  if (error) {
-    return <p>{error}</p>;
-  }
+  if (loading) return <p>Loading projects…</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div>
@@ -46,12 +34,8 @@ export default function ProjectListPage() {
         {projects.map((project) => (
           <li key={project.id}>
             <strong>{project.name}</strong>
-            {project.description && (
-              <div>{project.description}</div>
-            )}
-            <Link to={`/projects/${project.id}`}>
-              Open project
-            </Link>
+            {project.description && <div>{project.description}</div>}
+            <Link to={`/projects/${project.id}`}>Open project</Link>
           </li>
         ))}
       </ul>
