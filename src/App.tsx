@@ -47,7 +47,7 @@ const App: React.FC = () => {
               path="projects"
               element={
                 <RequireRole allowedRoles={routeRoles["/projects"]}>
-                  <ProjectsPage />
+                  <ProjectListPage />
                 </RequireRole>
               }
             />
