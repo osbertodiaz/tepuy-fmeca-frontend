@@ -1,6 +1,12 @@
 import React, { createContext, useContext, useState } from "react";
 import { loginRequest } from "../api/apiClient";
 
+/*
+  ======================================================
+  Types
+  ======================================================
+*/
+
 type User = {
   id: string;
   email: string;
@@ -19,12 +25,24 @@ type AuthContextType = AuthState & {
   logout: () => void;
 };
 
+/*
+  ======================================================
+  Context
+  ======================================================
+*/
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+/*
+  ======================================================
+  Provider
+  ======================================================
+*/
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [auth, setAuth] = useState<AuthState>({
     isAuthenticated: false,
-    user: null,
+    user: null,          // Backend no devuelve user en /login
     tenantId: null,
     accessToken: null,
   });
@@ -34,7 +52,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     setAuth({
       isAuthenticated: true,
-      user: response.user,
+      user: null,        // ✅ Correcto por ahora
       tenantId,
       accessToken: response.access_token,
     });
@@ -55,6 +73,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     </AuthContext.Provider>
   );
 };
+
+/*
+  ======================================================
+  Hook
+  ======================================================
+*/
 
 export const useAuthContext = () => {
   const ctx = useContext(AuthContext);
