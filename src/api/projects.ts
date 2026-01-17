@@ -1,4 +1,4 @@
-import apiClient from "./client";
+import { apiFetch } from "./client";
 
 export interface ProjectDTO {
   id: number;
@@ -8,7 +8,8 @@ export interface ProjectDTO {
   created_at: string;
 }
 
-export async function getProjects(): Promise<ProjectDTO[]> {
-  const response = await apiClient.get<ProjectDTO[]>("/projects");
-  return response.data;
+export async function getProjects(
+  tenantId: string
+): Promise<ProjectDTO[]> {
+  return apiFetch("/projects", { method: "GET" }, tenantId);
 }
