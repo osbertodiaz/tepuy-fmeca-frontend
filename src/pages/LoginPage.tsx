@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuthContext } from "../auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-export const LoginPage = () => {
+const LoginPage: React.FC = () => {
   const { login } = useAuthContext();
   const navigate = useNavigate();
 
@@ -17,7 +17,7 @@ export const LoginPage = () => {
 
     try {
       await login(tenantId, email, password);
-      navigate("/app");
+      navigate("/dashboard");
     } catch {
       setError("Login failed. Check tenant, email, or password.");
     }
@@ -56,3 +56,5 @@ export const LoginPage = () => {
     </form>
   );
 };
+
+export default LoginPage;
