@@ -8,11 +8,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export type LoginResponse = {
   access_token: string;
-  user: {
-    id: string;
-    email: string;
-    role: string;
-  };
+  token_type: string;
 };
 
 /*
@@ -45,7 +41,8 @@ async function apiFetch(
   });
 
   if (!response.ok) {
-    throw response;
+    const text = await response.text();
+    throw new Error(text || `HTTP ${response.status}`);
   }
 
   return response.json();
@@ -75,15 +72,15 @@ export async function loginRequest(
   password: string
 ): Promise<LoginResponse> {
   return apiFetch(
-    "/auth/login",
+    "/login", // ✅ ENDPOINT CORRECTO
     {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "application/json",
       },
-      body: new URLSearchParams({
-        username: email,
-        password: password,
+      body: JSON.stringify({
+        email,      // ✅ email (no username)
+        password,
       }),
     },
     tenantId
