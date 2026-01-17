@@ -9,7 +9,7 @@ import MainLayout from "./layouts/MainLayout";
 
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
-import ProjectsPage from "./pages/ProjectsPage";
+import ProjectListPage from "./pages/projects/ProjectListPage";
 import AdminPage from "./pages/AdminPage";
 import NotAuthorizedPage from "./pages/NotAuthorizedPage";
 
