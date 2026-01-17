@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getProjects, ProjectDTO } from "../../api/projects";
-import { useAuth } from "../../auth/AuthContext";
+import { useAuthContext } from "../../auth/AuthContext";
 
 export default function ProjectListPage() {
-  const { tenantId } = useAuth();
+  const { tenantId } = useAuthContext();
 
   const [projects, setProjects] = useState<ProjectDTO[]>([]);
   const [loading, setLoading] = useState(true);
